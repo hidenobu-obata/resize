@@ -15,7 +15,6 @@ export default function App() {
   
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  // 画像アップロード時の処理
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -27,7 +26,6 @@ export default function App() {
       const result = event.target?.result as string;
       setSelectedImage(result);
       
-      // 画像のオリジナルの幅・高さを取得
       const img = new Image();
       img.src = result;
       img.onload = () => {
@@ -45,7 +43,6 @@ export default function App() {
     setConvertedUrl(null);
   };
 
-  // 幅を変更したときの処理（アスペクト比固定対応）
   const handleWidthChange = (val: number) => {
     setWidth(val);
     if (maintainAspect && originalSize && originalSize.width > 0) {
@@ -54,7 +51,6 @@ export default function App() {
     }
   };
 
-  // 高さを変更したときの処理（アスペクト比固定対応）
   const handleHeightChange = (val: number) => {
     setHeight(val);
     if (maintainAspect && originalSize && originalSize.height > 0) {
@@ -63,7 +59,6 @@ export default function App() {
     }
   };
 
-  // リサイズ & WebP変換の実行
   const handleConvert = () => {
     if (!imageRef.current) return;
 
@@ -73,10 +68,8 @@ export default function App() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Canvasに画像を描画（ここでリサイズされる）
     ctx.drawImage(imageRef.current, 0, 0, width, height);
 
-    // WebP形式に変換
     canvas.toBlob(
       (blob) => {
         if (!blob) return;
@@ -89,7 +82,6 @@ export default function App() {
     );
   };
 
-  // スタイル定義
   const containerStyle: React.CSSProperties = {
     maxWidth: '600px',
     margin: '30px auto',
@@ -112,7 +104,6 @@ export default function App() {
       <div style={containerStyle}>
         <h2 style={{ color: '#333', textAlign: 'center', marginBottom: '20px' }}>ブラウザ側画像リサイザー</h2>
 
-        {/* ファイル選択 */}
         <div style={inputGroupStyle}>
           <label style={{ fontWeight: 'bold', fontSize: '14px' }}>画像をアップロード</label>
           <input
@@ -129,7 +120,6 @@ export default function App() {
               元画像: {originalSize.width} × {originalSize.height} px （{(originalSize.fileSize / 1024).toFixed(1)} KB）
             </div>
 
-            {/* リサイズ設定 */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               <div style={inputGroupStyle}>
                 <label style={{ fontSize: '13px', fontWeight: 'bold' }}>幅 (px)</label>
@@ -161,7 +151,6 @@ export default function App() {
               <label htmlFor="aspect">アスペクト比を固定する</label>
             </div>
 
-            {/* 品質設定 */}
             <div style={inputGroupStyle}>
               <label style={{ fontSize: '13px', fontWeight: 'bold' }}>WebP画質: {Math.round(quality * 100)}%</label>
               <input
@@ -192,7 +181,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 変換結果・ダウンロード */}
         {convertedUrl && convertedSize && (
           <div style={{ marginTop: '25px', padding: '15px', backgroundColor: '#f0fdf4', borderRadius: '10px', border: '1px solid #bbf7d0', textAlign: 'center' }}>
             <p style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#166534', fontWeight: 'bold' }}>
